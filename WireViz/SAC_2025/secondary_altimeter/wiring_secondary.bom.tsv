@@ -1,0 +1,11 @@
+Id	Description	Qty	Unit	Designators
+1	Cable, 1 x 22 AWG	9.5	m	power_cable_black, power_cable_black_10, power_cable_black_11, power_cable_black_2, power_cable_black_3, power_cable_black_4, power_cable_black_5, power_cable_black_6, power_cable_black_7, power_cable_black_8, power_cable_black_9, power_cable_red, power_cable_red_2, power_cable_red_3, power_cable_red_4, power_cable_red_5, power_cable_red_6, power_cable_red_7, power_cable_red_8
+2	Cable, 2 x 22 AWG	4.5	m	power_cable10, power_cable3, power_cable4, power_cable5, power_cable6, power_cable7, power_cable8, power_cable9, switch_wire_2
+3	Connector, 1 pins	6		connector_split, connector_split_2, connector_split_3, connector_split_4, connector_split_5, connector_split_6
+4	Connector, 2 pins	2		logic_switch_2, raven_logic_battery
+5	Connector, 3 pins	4		connector_combine, connector_combine_2, connector_combine_3, connector_combine_4
+6	Connector, Drogue Charge 2, 2 pins	1		drogue_charge2
+7	Connector, Main Charge 2, 2 pins	1		main_charge2
+8	Connector, Mcon Female 8 Pin, female, 8 pins	1		connector_mcon_1
+9	Connector, Mcon Male 8 Pin, male, 8 pins	1		connector_mcon_2
+10	Connector, Raven, 4 pins	1		raven_altimeter

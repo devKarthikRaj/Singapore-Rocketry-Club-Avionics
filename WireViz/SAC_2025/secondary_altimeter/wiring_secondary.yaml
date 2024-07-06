@@ -1,0 +1,368 @@
+connectors:
+  logic_switch_2:
+    pincount: 2
+
+  connector_split: &template_cn1
+    pincount: 1
+
+  connector_split_2: 
+    <<: *template_cn1
+
+  connector_split_3: 
+     <<: *template_cn1
+
+  connector_split_4: 
+     <<: *template_cn1
+
+  connector_split_5: 
+    <<: *template_cn1
+
+  connector_split_6: 
+     <<: *template_cn1
+
+  connector_split_7: 
+     <<: *template_cn1
+  
+  connector_split_8: 
+     <<: *template_cn1
+  
+  connector_split_9: 
+     <<: *template_cn1
+
+  connector_combine: &template_cn2
+    pincount: 3
+
+  connector_combine_2: 
+    <<: *template_cn2
+
+  connector_combine_3: 
+    <<: *template_cn2
+
+  connector_combine_4: 
+    <<: *template_cn2
+
+  connector_mcon_1:
+    type: Mcon Female 8 Pin
+    pincount: 8
+    subtype: female
+
+  connector_mcon_2:
+    type: Mcon Male 8 Pin
+    pincount: 8
+    subtype: male
+  
+  raven_altimeter:
+    type: Raven
+    pincount: 4
+    pinlabels: [GND, VCC, D+, M+]
+    notes: secondary altimeter
+
+  raven_logic_battery:
+    type: 
+    pincount: 2
+    pinlabels: [NT, PT]
+
+  drogue_charge2:
+    type: Drogue Charge 2
+    pincount: 2
+
+  main_charge2:
+    type: Main Charge 2
+    pincount: 2
+
+cables:
+
+  switch_wire_2: 
+    length: 0.5
+    gauge: 22 AWG
+    wirecount: 2
+    colors: [TQ]
+    notes: ferrule crimp
+
+  power_cable3: &template_cbl
+    length: 0.5
+    gauge: 22 AWG
+    wirecount: 2
+    colors: [RD, RD] 
+
+  power_cable4:
+    <<: *template_cbl
+
+  power_cable7:
+    <<: *template_cbl
+
+  power_cable8:
+    <<: *template_cbl
+
+  power_cable5: &template_cb4
+    length: 0.5
+    gauge: 22 AWG
+    wirecount: 2
+    colors: [BK, BK]
+
+  power_cable6:
+    <<: *template_cb4
+  
+  power_cable9:
+    <<: *template_cb4
+
+  power_cable10:
+    <<: *template_cb4
+  
+  power_cable_red: &template_cb2
+    length: 0.5
+    gauge: 22 AWG
+    wirecount: 1
+    colors: [RD]
+
+  power_cable_red_2:
+    <<: *template_cb2
+
+  power_cable_red_3:
+    <<: *template_cb2
+
+  power_cable_red_4:
+    <<: *template_cb2
+
+  power_cable_red_5:
+    <<: *template_cb2
+
+  power_cable_red_6:
+    <<: *template_cb2
+
+  power_cable_red_7:
+    <<: *template_cb2
+
+  power_cable_red_8:
+    <<: *template_cb2
+
+  power_cable_black: &template_cb3
+    length: 0.5
+    gauge: 22 AWG
+    wirecount: 1
+    colors: [BK]
+
+  power_cable_black_2:
+    <<: *template_cb3
+
+  power_cable_black_3:
+    <<: *template_cb3
+
+  power_cable_black_4:
+    <<: *template_cb3
+
+  power_cable_black_5:
+    <<: *template_cb3
+
+  power_cable_black_6:
+    <<: *template_cb3
+
+  power_cable_black_7:
+    <<: *template_cb3
+
+  power_cable_black_8:
+    <<: *template_cb3
+  
+  power_cable_black_9:
+    <<: *template_cb3
+
+  power_cable_black_10:
+    <<: *template_cb3
+
+  power_cable_black_11:
+    <<: *template_cb3
+
+connections:
+  -
+    - logic_switch_2: [1]
+    - switch_wire_2: [1]
+    - raven_altimeter: [2]
+
+  -
+    - logic_switch_2: [2]
+    - switch_wire_2: [2]
+    - raven_logic_battery: [2]
+  
+  - 
+    - raven_logic_battery: [1]
+    - power_cable_black: [1]
+    - connector_split: [1]
+  
+  - 
+    - connector_split: [1]
+    - power_cable_black_2: [1]
+    - raven_altimeter: [1]
+  
+  - 
+    - connector_split: [1]
+    - power_cable_black_3: [1]
+    - connector_split_2: [1]
+
+  - 
+    - connector_split_2: [1]
+    - power_cable_black_4: [1]
+    - connector_split_5: [1]
+
+  -
+    - connector_split_5: [1]
+    - power_cable_black_6: [1]
+    - connector_mcon_1: [3]
+
+  -
+    - connector_split_5: [1]
+    - power_cable_black_7: [1]
+    - connector_mcon_1: [4]
+
+  -
+    - connector_mcon_1: [3-4]
+    - power_cable5: [1-2]
+    - connector_mcon_2: [3-4]
+
+  -
+    - connector_mcon_2: [3-4]
+    - power_cable9: [1-2]
+    - connector_combine_2: [1-2]
+  
+  -
+    - connector_combine_2: [3]
+    - power_cable_black_8: [1]
+    - drogue_charge2: [2]
+
+  - 
+    - connector_split_2: [1]
+    - power_cable_black_5: [1]
+    - connector_split_6: [1]
+
+  -
+    - connector_split_6: [1]
+    - power_cable_black_9: [1]
+    - connector_mcon_1: [7]
+
+  -
+    - connector_split_6: [1]
+    - power_cable_black_10: [1]
+    - connector_mcon_1: [8]
+  
+  -
+    - connector_mcon_1: [7-8]
+    - power_cable6: [1-2]
+    - connector_mcon_2: [7-8]
+
+  
+  -
+    - connector_mcon_2: [7-8]
+    - power_cable10: [1-2]
+    - connector_combine_4: [1-2]
+
+  -
+    - connector_combine_4: [3]
+    - power_cable_black_11: [1]
+    - main_charge2: [2]
+
+  -
+    - raven_altimeter: [3]
+    - power_cable_red: [1]
+    - connector_split_3: [1]
+  -
+    - connector_split_3: [1]
+    - power_cable_red_2: [1]
+    - connector_mcon_1: [1]
+
+  -
+    - connector_split_3: [1]
+    - power_cable_red_3: [1]
+    - connector_mcon_1: [2]
+
+  -
+    - raven_altimeter: [4]
+    - power_cable_red_4: [1]
+    - connector_split_4: [1]
+  -
+    - connector_split_4: [1]
+    - power_cable_red_5: [1]
+    - connector_mcon_1: [5]
+
+  -
+    - connector_split_4: [1]
+    - power_cable_red_6: [1]
+    - connector_mcon_1: [6]
+
+  -
+    - connector_mcon_1: [1-2]
+    - power_cable3: [1-2]
+    - connector_mcon_2: [1-2]
+
+  -
+    - connector_mcon_1: [5-6]
+    - power_cable4: [1-2]
+    - connector_mcon_2: [5-6]
+
+  -
+    - connector_mcon_2: [1-2]
+    - power_cable7: [1-2]
+    - connector_combine: [1-2]
+
+  -
+    - connector_mcon_2: [5-6]
+    - power_cable8: [1-2]
+    - connector_combine_3: [1-2]
+  
+  -
+    - connector_combine: [3]
+    - power_cable_red_7: [1]
+    - drogue_charge2: [1]
+  
+  -
+    - connector_combine_3: [3]
+    - power_cable_red_8: [1]
+    - main_charge2: [1]
+
+  # -
+  #   - raven_altimeter: [1]
+  #   - power_cable_single: [1]
+  #   - raven_logic_battery: [1]
+  
+  #  -
+  #   - raven_altimeter: [3]
+  #   - power_cable_single_2: [1]
+  #   - connector_mcon_1: [5]
+
+  # -
+  #   - raven_altimeter: [4]
+  #   - power_cable_single_3: [1]
+  #   - connector_mcon_1: [7]
+  
+  #  -
+  #   - connector_mcon_2: [5]
+  #   - power_cable_single_6: [1]
+  #   - drogue_charge2: [1]
+
+  # -
+  #   - connector_mcon_2: [7]
+  #   - power_cable_single_7: [1]
+  #   - main_charge2: [1]
+
+  # - 
+  #   - raven_logic_battery: [1]
+  #   - power_cable_single_8: [1]
+  #   - connector_3: [1]
+
+  # - 
+  #   - connector_3: [1]
+  #   - power_cable_single_9: [1]
+  #   - connector_mcon_1: [6]
+
+  # - 
+  #   - connector_3: [1]
+  #   - power_cable_single_10: [1]
+  #   - connector_mcon_1: [8]
+  
+  # - 
+  #   - connector_mcon_2: [6]
+  #   - power_cable_single_13: [1]
+  #   - drogue_charge2: [2]
+
+  # - 
+  #   - connector_mcon_2: [8]
+  #   - power_cable_single_14: [1]
+  #   - main_charge2: [2]
