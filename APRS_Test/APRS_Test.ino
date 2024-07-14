@@ -116,7 +116,7 @@ void setup() {
 }
 
 void loop() {
-  wdt_reset();
+   wdt_reset();
   
   if (readBatt() > BattMin) {
   
@@ -136,7 +136,7 @@ void loop() {
       
    }
     
-    updateGpsData(3000); //default was updateGpsData(1000);
+    updateGpsData(1000);
     gpsDebug();
 
     
@@ -373,15 +373,17 @@ void sendLocation() {
 void sendStatus() {
   if ((readBatt() > DraHighVolt) && (readBatt() < 10)) RfPwrHigh; //DRA Power 1 Watt
   else RfPwrLow; //DRA Power 0.5 Watt
-
+  
   RfON;
   delay(2000);
+  Serial.println("before rfptton");  
   RfPttON;
-  delay(1000);
-    
+  Serial.println("after rfptton");
+  delay(2000);
+  
   APRS_sendStatus(StatusMessage, strlen(StatusMessage));
-
-  while(digitalRead(1)){;}//LibAprs TX Led pin PB1
+ 
+  //while(digitalRead(1)){Serial.println("inside while loop");}//LibAprs TX Led pin PB1
   delay(50);
   RfPttOFF;
   RfOFF;
