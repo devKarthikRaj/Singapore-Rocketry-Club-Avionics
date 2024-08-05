@@ -383,7 +383,8 @@ void sendStatus() {
   
   APRS_sendStatus(StatusMessage, strlen(StatusMessage));
  
-  //while(digitalRead(1)){Serial.println("inside while loop");}//LibAprs TX Led pin PB1
+  //while(digitalRead(1)){Serial.println("inside while loop");}//LibAprs TX Led pin PB1 - Uncommenting this line will hang the loop
+  delay(2000); //Rec fix by QRP Labs for this issue
   delay(50);
   RfPttOFF;
   RfOFF;
