@@ -43,7 +43,7 @@ char StatusMessage[50] = "LightAPRS by TA9OHC & TA2MUN";
 //*****************************************************************************
 
 
-unsigned int   BeaconWait=60;  //seconds sleep for next beacon (TX).
+unsigned int   BeaconWait=20;  //seconds sleep for next beacon (TX).
 unsigned int   BattWait=60;    //seconds sleep if super capacitors/batteries are below BattMin (important if power source is solar panel) 
 float BattMin=4.5;        // min Volts to wake up.
 float DraHighVolt=8.0;    // min Volts for radio module (DRA818V) to transmit (TX) 1 Watt, below this transmit 0.5 Watt. You don't need 1 watt on a balloon. Do not change this.
@@ -376,18 +376,22 @@ void sendStatus() {
   
   RfON;
   delay(2000);
-  Serial.println("before rfptton");  
+  Serial.println("1");  
   RfPttON;
-  Serial.println("after rfptton");
-  delay(2000);
-  
+  Serial.println("2");
+  //delay(2000);
+  Serial.println("3");
   APRS_sendStatus(StatusMessage, strlen(StatusMessage));
- 
+  Serial.println("4");
   //while(digitalRead(1)){Serial.println("inside while loop");}//LibAprs TX Led pin PB1 - Uncommenting this line will hang the loop
-  delay(2000); //Rec fix by QRP Labs for this issue
-  delay(50);
+  //delay(2000); //Rec fix by QRP Labs for this issue
+  Serial.println("5");
+  //delay(50);
+  Serial.println("6");
   RfPttOFF;
+  Serial.println("7");
   RfOFF;
+  Serial.println("8");
 #if defined(DEVMODE)
   Serial.println(F("Status sent"));
 #endif
