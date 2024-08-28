@@ -13,6 +13,7 @@
 #define BattPin     A2
 #define PIN_DRA_RX  22
 #define PIN_DRA_TX  23
+#define TX_LED      7
 
 #define ADC_REFERENCE REF_3V3
 #define OPEN_SQUELCH false
@@ -84,6 +85,8 @@ void setup() {
   pinMode(RfPttPin, OUTPUT);
   pinMode(BattPin, INPUT);
   pinMode(PIN_DRA_TX,INPUT);
+  pinMode(TX_LED, OUTPUT);
+  digitalWrite(TX_LED, LOW);
 
   RfOFF;
   GpsOFF;
@@ -368,6 +371,20 @@ void sendLocation() {
 #endif
 
   TxCount++;
+
+  //Blink LED on PB7
+  digitalWrite(TX_LED, HIGH);
+  delay(100);
+  digitalWrite(TX_LED, LOW);
+  delay(100);
+  digitalWrite(TX_LED, HIGH);
+  delay(100);
+  digitalWrite(TX_LED, LOW);
+  delay(100);
+  digitalWrite(TX_LED, HIGH);
+  delay(100);
+  digitalWrite(TX_LED, LOW);
+  delay(100);
 }
 
 void sendStatus() {
