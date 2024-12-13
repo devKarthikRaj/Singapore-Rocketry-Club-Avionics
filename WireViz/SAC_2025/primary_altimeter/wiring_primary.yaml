@@ -126,6 +126,7 @@ cables:
 
   power_cable6:
     <<: *template_cb4
+    
 
   power_cable10:
     <<: *template_cb4
