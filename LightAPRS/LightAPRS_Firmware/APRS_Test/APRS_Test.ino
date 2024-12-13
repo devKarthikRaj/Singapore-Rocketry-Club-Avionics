@@ -13,6 +13,7 @@
 #define BattPin     A2
 #define PIN_DRA_RX  22
 #define PIN_DRA_TX  23
+#define TX_LED      7
 
 #define ADC_REFERENCE REF_3V3
 #define OPEN_SQUELCH false
@@ -43,7 +44,7 @@ char StatusMessage[50] = "LightAPRS by TA9OHC & TA2MUN";
 //*****************************************************************************
 
 
-unsigned int   BeaconWait=60;  //seconds sleep for next beacon (TX).
+unsigned int   BeaconWait=20;  //seconds sleep for next beacon (TX).
 unsigned int   BattWait=60;    //seconds sleep if super capacitors/batteries are below BattMin (important if power source is solar panel) 
 float BattMin=4.5;        // min Volts to wake up.
 float DraHighVolt=8.0;    // min Volts for radio module (DRA818V) to transmit (TX) 1 Watt, below this transmit 0.5 Watt. You don't need 1 watt on a balloon. Do not change this.
@@ -84,6 +85,8 @@ void setup() {
   pinMode(RfPttPin, OUTPUT);
   pinMode(BattPin, INPUT);
   pinMode(PIN_DRA_TX,INPUT);
+  pinMode(TX_LED, OUTPUT);
+  digitalWrite(TX_LED, LOW);
 
   RfOFF;
   GpsOFF;
@@ -368,6 +371,20 @@ void sendLocation() {
 #endif
 
   TxCount++;
+
+  //Blink LED on PB7
+  digitalWrite(TX_LED, HIGH);
+  delay(100);
+  digitalWrite(TX_LED, LOW);
+  delay(100);
+  digitalWrite(TX_LED, HIGH);
+  delay(100);
+  digitalWrite(TX_LED, LOW);
+  delay(100);
+  digitalWrite(TX_LED, HIGH);
+  delay(100);
+  digitalWrite(TX_LED, LOW);
+  delay(100);
 }
 
 void sendStatus() {
@@ -376,17 +393,22 @@ void sendStatus() {
   
   RfON;
   delay(2000);
-  Serial.println("before rfptton");  
+  Serial.println("1");  
   RfPttON;
-  Serial.println("after rfptton");
-  delay(2000);
-  
+  Serial.println("2");
+  //delay(2000);
+  Serial.println("3");
   APRS_sendStatus(StatusMessage, strlen(StatusMessage));
- 
-  //while(digitalRead(1)){Serial.println("inside while loop");}//LibAprs TX Led pin PB1
-  delay(50);
+  Serial.println("4");
+  //while(digitalRead(1)){Serial.println("inside while loop");}//LibAprs TX Led pin PB1 - Uncommenting this line will hang the loop
+  //delay(2000); //Rec fix by QRP Labs for this issue
+  Serial.println("5");
+  //delay(50);
+  Serial.println("6");
   RfPttOFF;
+  Serial.println("7");
   RfOFF;
+  Serial.println("8");
 #if defined(DEVMODE)
   Serial.println(F("Status sent"));
 #endif
