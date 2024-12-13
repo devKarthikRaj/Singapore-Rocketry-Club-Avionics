@@ -1,0 +1,11 @@
+Id	Description	Qty	Unit	Designators
+1	Cable, 2 x 0.25 mm²	1.0	m	power_cable, power_cable_9
+2	Cable, 2 x 22 AWG	7.0	m	power_cable12, power_cable13, power_cable14, power_cable15, power_cable3, power_cable4, power_cable7, power_cable8, power_cable_red_2, power_cable_red_3, power_cable_red_4, power_cable_red_7, switch_wire, switch_wire_2
+3	Connector, 2 pins	4		logic_switch, logic_switch_2, rrc3_logic_battery, rrc3_logic_battery_2
+4	Connector, Drogue Charge 1, 2 pins	1		drogue_charge1
+5	Connector, Drogue Charge 2, 2 pins	1		drogue_charge2
+6	Connector, Main Charge 1, 2 pins	1		main_charge1
+7	Connector, Main Charge 2, 2 pins	1		main_charge2
+8	Connector, Mcon Female 4 Pin, female, 4 pins	2		connector_mcon_1, connector_mcon_3
+9	Connector, Mcon Male 4 Pin, male, 4 pins	2		connector_mcon_2, connector_mcon_4
+10	Connector, RRC3, 8 pins	2		rrc3_altimeter, rrc3_altimeter_2
