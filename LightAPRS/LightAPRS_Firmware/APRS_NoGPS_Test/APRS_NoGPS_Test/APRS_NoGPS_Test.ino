@@ -119,14 +119,12 @@ void setup() {
 }
 
 void loop() {
-   wdt_reset();
+  wdt_reset();
   
   if (readBatt() > BattMin) {
   
   if(aliveStatus){
-
       //send status tx on startup once (before gps fix)
-      
       #if defined(DEVMODE)
         Serial.println(F("Sending"));
       #endif
@@ -135,56 +133,13 @@ void loop() {
         Serial.println(F("Sent"));
       #endif
       
-      aliveStatus = false;
-      
+      aliveStatus = false;  
    }
     
-    updateGpsData(1000);
-    gpsDebug();
-
-    
-    if ((gps.location.age() < 1000 || gps.location.isUpdated()) && gps.location.isValid()) {
-      if (gps.satellites.isValid() && (gps.satellites.value() > 3)) {
-      updatePosition();
-      updateTelemetry();
-      
-      //GpsOFF;
-      setGPS_PowerSaveMode();
-      //GpsFirstFix=true;
-
-      if(autoPathSizeHighAlt && gps.altitude.feet()>3000){
-            //force to use high altitude settings (WIDE2-n)
-            APRS_setPathSize(1);
-        } else {
-            //use defualt settings  
-            APRS_setPathSize(pathSize);
-        }
-      
-      //send status message every 60 minutes
-      if(gps.time.minute() == 30){               
-        sendStatus();       
-      } else {
-
-         sendLocation();
-
-      }
-
-      freeMem();
-      Serial.flush();
-      sleepSeconds(BeaconWait);
-
-      } else {
-#if defined(DEVMODE)
-      Serial.println(F("Not enough sattelites"));
-#endif
-      }
-    } 
-  } else {
-
-    sleepSeconds(BattWait);
-    
-  }
-  
+  //Send Packet
+  Serial.println("Sending Packet...");
+  sendLocation(); 
+  delay(1000);
 }
 
 void aprs_msg_callback(struct AX25Msg *msg) {
@@ -203,8 +158,6 @@ void sleepSeconds(int sec) {
   }
    wdt_enable(WDTO_8S);
 }
-
-
 
 byte configDra818(char *freq)
 {
@@ -296,7 +249,6 @@ void updatePosition() {
   APRS_setLon(lonStr);
 }
 
-
 void updateTelemetry() {
  
   sprintf(telemetry_buff, "%03d", gps.course.isValid() ? (int)gps.course.deg() : 0);
@@ -328,7 +280,6 @@ void updateTelemetry() {
   telemetry_buff[53] = ' ';
   sprintf(telemetry_buff + 54, "%s", comment);
   
-
 #if defined(DEVMODE)
   Serial.println(telemetry_buff);
 #endif
@@ -416,7 +367,6 @@ void sendStatus() {
   TxCount++;
 
 }
-
 
 static void updateGpsData(int ms)
 {
