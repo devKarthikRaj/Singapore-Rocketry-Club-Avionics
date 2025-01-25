@@ -1,12 +1,11 @@
 Id	Description	Qty	Unit	Designators
-1	Cable, 1 x 22 AWG	8.0	m	power_cable_black, power_cable_black_2, power_cable_black_3, power_cable_black_4, power_cable_black_5, power_cable_black_6, power_cable_black_7, power_cable_black_8, power_cable_red, power_cable_red_2, power_cable_red_3, power_cable_red_4, power_cable_red_5, power_cable_red_6, power_cable_red_7, power_cable_red_8
-2	Cable, 2 x 0.25 mm²	0.5	m	power_cable
-3	Cable, 2 x 22 AWG	4.5	m	power_cable10, power_cable3, power_cable4, power_cable5, power_cable6, power_cable7, power_cable8, power_cable9, switch_wire
-4	Connector, 1 pins	4		connector_split, connector_split_2, connector_split_3, connector_split_4
-5	Connector, 2 pins	2		logic_switch, rrc3_logic_battery
-6	Connector, 3 pins	4		connector_combine, connector_combine_2, connector_combine_3, connector_combine_4
-7	Connector, Drogue Charge 1, 2 pins	1		drogue_charge1
-8	Connector, Main Charge 1, 2 pins	1		main_charge1
-9	Connector, Mcon Female 8 Pin, female, 8 pins	1		connector_mcon_1
-10	Connector, Mcon Male 8 Pin, male, 8 pins	1		connector_mcon_2
-11	Connector, RRC3, 8 pins	1		rrc3_altimeter
+1	Cable, 2 x 0.25 mm²	1.0	m	power_cable, power_cable_9
+2	Cable, 2 x 22 AWG	7.0	m	power_cable12, power_cable13, power_cable14, power_cable15, power_cable3, power_cable4, power_cable7, power_cable8, power_cable_red_2, power_cable_red_3, power_cable_red_4, power_cable_red_7, switch_wire, switch_wire_2
+3	Connector, 2 pins	4		logic_switch, logic_switch_2, rrc3_logic_battery, rrc3_logic_battery_2
+4	Connector, Drogue Charge 1, 2 pins	1		drogue_charge1
+5	Connector, Drogue Charge 2, 2 pins	1		drogue_charge2
+6	Connector, Main Charge 1, 2 pins	1		main_charge1
+7	Connector, Main Charge 2, 2 pins	1		main_charge2
+8	Connector, Mcon Female 4 Pin, female, 4 pins	2		connector_mcon_1, connector_mcon_3
+9	Connector, Mcon Male 4 Pin, male, 4 pins	2		connector_mcon_2, connector_mcon_4
+10	Connector, RRC3, 8 pins	2		rrc3_altimeter, rrc3_altimeter_2
