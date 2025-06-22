@@ -1,0 +1,12 @@
+Id	Description	Qty	Unit	Designators
+1	Cable, 2 x 22 AWG	14	m	PrimaryIn, PrimaryOut, SecondaryIn, SecondaryOut, mil_con_to_e_match_primary, mil_con_to_e_match_secondary, mil_con_to_main_ejection_primary, mil_con_to_main_ejection_secondary, primary_sw_cable, rrc3_to_ejection_drogue_primary, rrc3_to_ejection_drogue_secondary, rrc3_to_ejection_main_primary, rrc3_to_ejection_main_secondary, seconday_sw_cable
+2	Connector, 2 pins	2		logic_switch_primary, logic_switch_secondary
+3	Connector, Circular Mil Spec Connector, Female, 4 pins	2		ejection_mil_con_drogue_in, ejection_mil_con_main_in
+4	Connector, Circular Mil Spec Connector, Male, 4 pins	2		ejection_mil_con_drogue_out, ejection_mil_con_main_out
+5	Connector, E_match, Flammable, 2 pins	4		drogue_e_match_primary, drogue_e_match_secondary, main_ejection_primary, main_ejection_secondary
+6	Connector, LiFePO4 Battery, 2 pins	2		rrc3_logic_battery_primary, rrc3_logic_battery_secondary
+7	Connector, RRC3, 8 pins	2		rrc3_altimeter_primary, rrc3_altimeter_secondary
+8	Connector, XT60, Female, 2 pins	2		bat_xt60_primary, bat_xt60_secondary
+9	Connector, XT60, Male, 2 pins	2		rrc3_xt60_primary, rrc3_xt60_secondary
+10	Connector, ferrule, Butt Splice, WH	8		
+11	Connector, ferrule, WH	16		
