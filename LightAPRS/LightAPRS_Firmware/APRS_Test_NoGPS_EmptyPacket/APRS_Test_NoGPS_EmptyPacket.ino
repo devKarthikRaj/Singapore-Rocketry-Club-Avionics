@@ -17,7 +17,7 @@
 // Constants
 #define ADC_REFERENCE REF_3V3
 #define OPEN_SQUELCH false
-#define DraHighVolt 8.0    // min Volts for radio module (DRA818V) to transmit (TX) 1 Watt
+#define DraHighVolt 8.0    // min Volts for radio module (DRA818V) to transmit (TX) 1 Watt  
 
 // Pin Control Macros
 #define RfON          digitalWrite(RfPDPin, HIGH)
@@ -215,6 +215,7 @@ void sendStatus() {
           voltage,   // Voltage
           comment);
   
+  digitalWrite(TX_LED, HIGH); // Blink LED (Turn On)
   // Turn on PTT and wait for radio to stabilize
   RfPttON;
   delay(100);
@@ -224,6 +225,8 @@ void sendStatus() {
   
   // Wait for transmission to complete
   delay(500);
+
+  digitalWrite(TX_LED, LOW); // Blink LED (Turn Off)
   
   // Turn off PTT and radio
   RfPttOFF;

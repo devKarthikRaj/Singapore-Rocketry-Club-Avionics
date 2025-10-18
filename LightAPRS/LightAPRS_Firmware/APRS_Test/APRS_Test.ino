@@ -40,7 +40,7 @@ bool alternateSymbolTable = false ; //false = '/' , true = '\'
 char Frequency[9]="144.3900"; //default frequency. 144.3900 for US, 144.8000 for Europe
 
 char comment[50] = "http://www.lightaprs.com"; // Max 50 char
-char StatusMessage[50] = "LightAPRS by TA9OHC & TA2MUN"; 
+char StatusMessage[50] = "Hello World"; 
 //*****************************************************************************
 
 
@@ -66,7 +66,10 @@ int pathSize=2; // 2 for WIDE1-N,WIDE2-N ; 1 for WIDE2-N
 boolean autoPathSizeHighAlt = true; //force path to WIDE2-N only for high altitude (airborne) beaconing (over 1.000 meters (3.280 feet)) 
 
 //boolean GpsFirstFix=false;
-boolean ublox_high_alt_mode = false;
+boolean ublox_high_alt_mode = false; // SET THIS TO TRUE PRE-FLIGHT [FOR NEW DAWN AND ROCKETRY !!!]
+// High altitude mode tells the GPS receiver that it should expect to fly high and fast and should not reject
+// those high and fast GPS signals as errors. Note that this module is not COCOM unlocked so if this LightAPRS
+// module flies above 18km at more than Mach 1.5, GPS will be disabled.
 
 static char telemetry_buff[100];// telemetry buffer
 uint16_t TxCount = 1;
@@ -122,17 +125,21 @@ void loop() {
    wdt_reset();
   
   if (readBatt() > BattMin) {
+
+    #if defined(DEVMODE)
+        Serial.println(F("Batt OK"));
+      #endif
   
   if(aliveStatus){
 
       //send status tx on startup once (before gps fix)
       
       #if defined(DEVMODE)
-        Serial.println(F("Sending"));
+        Serial.println(F("Sending Im Alive Status..."));
       #endif
       sendStatus();
       #if defined(DEVMODE)
-        Serial.println(F("Sent"));
+        Serial.println(F("Status Sent\n"));
       #endif
       
       aliveStatus = false;
@@ -174,18 +181,56 @@ void loop() {
       sleepSeconds(BeaconWait);
 
       } else {
-#if defined(DEVMODE)
-      Serial.println(F("Not enough sattelites"));
-#endif
+        #if defined(DEVMODE)
+              Serial.println(F("Not Enough Satellites !!!"));
+        #endif
       }
     } 
   } else {
-
     sleepSeconds(BattWait);
-    
   }
-  
+
+  // --- FOR DEBUGGING ONLY --- REMOVE BEFORE FLIGHT --- 
+  if (!gps.location.isValid()) {
+      #if defined(DEVMODE)
+          Serial.println(F("No valid GPS data yet (no fix)."));
+      #endif
+      
+      digitalWrite(TX_LED, HIGH);
+      delay(300);
+      digitalWrite(TX_LED, LOW);
+      delay(700);
+      digitalWrite(TX_LED, HIGH);
+      delay(300);
+      digitalWrite(TX_LED, LOW);
+      delay(700);
+      digitalWrite(TX_LED, HIGH);
+      delay(300);
+      digitalWrite(TX_LED, LOW);
+      delay(700);
+  } 
+  else if (gps.satellites.isValid() && gps.satellites.value() <= 3) {
+      #if defined(DEVMODE)
+          Serial.println(F("Not enough satellites for fix."));
+      #endif
+      
+      digitalWrite(TX_LED, HIGH);
+      delay(300);
+      digitalWrite(TX_LED, LOW);
+      delay(700);
+      digitalWrite(TX_LED, HIGH);
+      delay(300);
+      digitalWrite(TX_LED, LOW);
+      delay(700);
+      digitalWrite(TX_LED, HIGH);
+      delay(300);
+      digitalWrite(TX_LED, LOW);
+      delay(700);
+  } 
+  // --- END OF DEBUGGING ONLY CODE --- 
 }
+
+// User Function Definitions
 
 void aprs_msg_callback(struct AX25Msg *msg) {
   //do not remove this function, necessary for LibAPRS
@@ -205,7 +250,8 @@ void sleepSeconds(int sec) {
 }
 
 
-
+// DRA818V (VHF Band Voice Transceiver Module) Config Function
+// This is the big SoM on the back of LightAPRS with the shiny RF shielding can.
 byte configDra818(char *freq)
 {
   SoftwareSerial Serial_dra(PIN_DRA_RX, PIN_DRA_TX);
@@ -372,7 +418,7 @@ void sendLocation() {
 
   TxCount++;
 
-  //Blink LED on PB7
+  //Blink Status LED to indicate sending location
   digitalWrite(TX_LED, HIGH);
   delay(100);
   digitalWrite(TX_LED, LOW);
@@ -392,28 +438,22 @@ void sendStatus() {
   else RfPwrLow; //DRA Power 0.5 Watt
   
   RfON;
-  delay(2000);
-  Serial.println("1");  
+  delay(2000); // Moved delay from line 404 to 402 for this function to work
   RfPttON;
-  Serial.println("2");
-  //delay(2000);
-  Serial.println("3");
+  //delay(2000); // Delay at line 404 causes this function to hang
   APRS_sendStatus(StatusMessage, strlen(StatusMessage));
-  Serial.println("4");
   //while(digitalRead(1)){Serial.println("inside while loop");}//LibAprs TX Led pin PB1 - Uncommenting this line will hang the loop
   //delay(2000); //Rec fix by QRP Labs for this issue
-  Serial.println("5");
   //delay(50);
-  Serial.println("6");
   RfPttOFF;
-  Serial.println("7");
   RfOFF;
-  Serial.println("8");
-#if defined(DEVMODE)
-  Serial.println(F("Status sent"));
-#endif
 
   TxCount++;
+
+  // Blink status LED once to indicate sending status
+  digitalWrite(TX_LED, HIGH);
+  delay(300);
+  digitalWrite(TX_LED, LOW);
 
 }
 
