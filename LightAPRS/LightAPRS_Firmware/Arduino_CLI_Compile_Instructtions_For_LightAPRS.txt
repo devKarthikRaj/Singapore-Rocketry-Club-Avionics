@@ -1,7 +1,0 @@
-In the folder with the code
-
-Compile
-arduino-cli compile --fqbn MightyCore:avr:1284:bootloader=uart0,BOD=2v7,LTO=Os,clock=8MHz_external,variant=modelP,pinout=standard .
-
-Upload
-arduino-cli upload -p COM12 --fqbn MightyCore:avr:1284:bootloader=uart0,BOD=2v7,LTO=Os,clock=8MHz_external,variant=modelP,pinout=standard --verify --verbose

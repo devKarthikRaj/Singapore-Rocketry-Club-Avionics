@@ -40,7 +40,7 @@ bool alternateSymbolTable = false ; //false = '/' , true = '\'
 char Frequency[9]="144.3900"; //default frequency. 144.3900 for US, 144.8000 for Europe
 
 char comment[50] = "http://www.lightaprs.com"; // Max 50 char
-char StatusMessage[50] = "LightAPRS by TA9OHC & TA2MUN"; 
+char StatusMessage[50] = "Hello World"; 
 //*****************************************************************************
 
 
@@ -66,7 +66,10 @@ int pathSize=2; // 2 for WIDE1-N,WIDE2-N ; 1 for WIDE2-N
 boolean autoPathSizeHighAlt = true; //force path to WIDE2-N only for high altitude (airborne) beaconing (over 1.000 meters (3.280 feet)) 
 
 //boolean GpsFirstFix=false;
-boolean ublox_high_alt_mode = false;
+boolean ublox_high_alt_mode = false; // SET THIS TO TRUE PRE-FLIGHT [FOR NEW DAWN AND ROCKETRY !!!]
+// High altitude mode tells the GPS receiver that it should expect to fly high and fast and should not reject
+// those high and fast GPS signals as errors. Note that this module is not COCOM unlocked so if this LightAPRS
+// module flies above 18km at more than Mach 1.5, GPS will be disabled.
 
 static char telemetry_buff[100];// telemetry buffer
 uint16_t TxCount = 1;
@@ -122,25 +125,82 @@ void loop() {
   wdt_reset();
   
   if (readBatt() > BattMin) {
+
+    #if defined(DEVMODE)
+      Serial.println(F("Batt OK"));
+    #endif
   
-  if(aliveStatus){
+    if(aliveStatus){
       //send status tx on startup once (before gps fix)
       #if defined(DEVMODE)
-        Serial.println(F("Sending"));
+        Serial.println(F("Sending Im Alive Status..."));
       #endif
       sendStatus();
       #if defined(DEVMODE)
-        Serial.println(F("Sent"));
+        Serial.println(F("Status Sent\n"));
+      #endif
+      aliveStatus = false; 
+    }
+    
+    updateGpsData(1000);
+    gpsDebug();
+ 
+    if ((gps.location.age() < 1000 || gps.location.isUpdated()) && gps.location.isValid() && gps.satellites.value() > 3) {
+        updatePosition();
+        updateTelemetry();
+        sendLocation();
+    } else {
+    #if defined(DEVMODE)
+        Serial.println(F("No valid GPS fix, using fake coordinates (Starbase, TX)"));
+    #endif
+        setFakeGPSCoordinates();
+        sendLocation();
+    }
+  } else {
+    sleepSeconds(BattWait);
+  }
+  
+  // --- FOR DEBUGGING ONLY --- REMOVE BEFORE FLIGHT --- 
+  if (!gps.location.isValid()) {
+      #if defined(DEVMODE)
+          Serial.println(F("No valid GPS data yet (no fix)."));
       #endif
       
-      aliveStatus = false;  
-   }
-    
-  //Send Packet
-  Serial.println("Sending Packet...");
-  sendLocation(); 
-  delay(1000);
-}
+      digitalWrite(TX_LED, HIGH);
+      delay(300);
+      digitalWrite(TX_LED, LOW);
+      delay(700);
+      digitalWrite(TX_LED, HIGH);
+      delay(300);
+      digitalWrite(TX_LED, LOW);
+      delay(700);
+      digitalWrite(TX_LED, HIGH);
+      delay(300);
+      digitalWrite(TX_LED, LOW);
+      delay(700);
+  } 
+  else if (gps.satellites.isValid() && gps.satellites.value() <= 3) {
+      #if defined(DEVMODE)
+          Serial.println(F("Not enough satellites for fix."));
+      #endif
+      
+      digitalWrite(TX_LED, HIGH);
+      delay(300);
+      digitalWrite(TX_LED, LOW);
+      delay(700);
+      digitalWrite(TX_LED, HIGH);
+      delay(300);
+      digitalWrite(TX_LED, LOW);
+      delay(700);
+      digitalWrite(TX_LED, HIGH);
+      delay(300);
+      digitalWrite(TX_LED, LOW);
+      delay(700);
+  } 
+  // --- END OF DEBUGGING ONLY CODE ---
+} 
+
+// User Function Definitions
 
 void aprs_msg_callback(struct AX25Msg *msg) {
   //do not remove this function, necessary for LibAPRS
@@ -159,6 +219,9 @@ void sleepSeconds(int sec) {
    wdt_enable(WDTO_8S);
 }
 
+
+// DRA818V (VHF Band Voice Transceiver Module) Config Function
+// This is the big SoM on the back of LightAPRS with the shiny RF shielding can.
 byte configDra818(char *freq)
 {
   SoftwareSerial Serial_dra(PIN_DRA_RX, PIN_DRA_TX);
@@ -249,6 +312,7 @@ void updatePosition() {
   APRS_setLon(lonStr);
 }
 
+
 void updateTelemetry() {
  
   sprintf(telemetry_buff, "%03d", gps.course.isValid() ? (int)gps.course.deg() : 0);
@@ -280,6 +344,7 @@ void updateTelemetry() {
   telemetry_buff[53] = ' ';
   sprintf(telemetry_buff + 54, "%s", comment);
   
+
 #if defined(DEVMODE)
   Serial.println(telemetry_buff);
 #endif
@@ -323,7 +388,7 @@ void sendLocation() {
 
   TxCount++;
 
-  //Blink LED on PB7
+  //Blink Status LED to indicate sending location
   digitalWrite(TX_LED, HIGH);
   delay(100);
   digitalWrite(TX_LED, LOW);
@@ -343,30 +408,25 @@ void sendStatus() {
   else RfPwrLow; //DRA Power 0.5 Watt
   
   RfON;
-  delay(2000);
-  Serial.println("1");  
+  delay(2000); // Moved delay from line 404 to 402 for this function to work
   RfPttON;
-  Serial.println("2");
-  //delay(2000);
-  Serial.println("3");
+  //delay(2000); // Delay at line 404 causes this function to hang
   APRS_sendStatus(StatusMessage, strlen(StatusMessage));
-  Serial.println("4");
   //while(digitalRead(1)){Serial.println("inside while loop");}//LibAprs TX Led pin PB1 - Uncommenting this line will hang the loop
   //delay(2000); //Rec fix by QRP Labs for this issue
-  Serial.println("5");
   //delay(50);
-  Serial.println("6");
   RfPttOFF;
-  Serial.println("7");
   RfOFF;
-  Serial.println("8");
-#if defined(DEVMODE)
-  Serial.println(F("Status sent"));
-#endif
 
   TxCount++;
 
+  // Blink status LED once to indicate sending status
+  digitalWrite(TX_LED, HIGH);
+  delay(300);
+  digitalWrite(TX_LED, LOW);
+
 }
+
 
 static void updateGpsData(int ms)
 {
@@ -617,4 +677,49 @@ void setGPS_PowerSaveMode() {
   uint8_t setPSM[] = { 
     0xB5, 0x62, 0x06, 0x11, 0x02, 0x00, 0x08, 0x01, 0x22, 0x92           }; // Setup for Power Save Mode (Default Cyclic 1s)
   sendUBX(setPSM, sizeof(setPSM)/sizeof(uint8_t));
+}
+
+void setFakeGPSCoordinates() {
+  // Starbase, Texas (approx. SpaceX launch site)
+  double fakeLat = 25.9972;   // degrees North
+  double fakeLon = -97.1566;  // degrees West
+  double fakeAlt = 10.0;      // meters
+
+  // --- Latitude ---
+  char latStr[12];  // ddmm.mmN + null
+  int latDeg = (int)fabs(fakeLat);
+  double latMin = (fabs(fakeLat) - latDeg) * 60.0;
+  char minBuff[10];
+  dtostrf(latMin, 7, 2, minBuff);  // widen field to prevent truncation
+  sprintf(latStr, "%02d%s%c", latDeg, minBuff, (fakeLat >= 0.0) ? 'N' : 'S');
+
+  // --- Longitude ---
+  char lonStr[12]; // dddmm.mmE + null
+  int lonDeg = (int)fabs(fakeLon);
+  double lonMin = (fabs(fakeLon) - lonDeg) * 60.0;
+  char lonMinBuff[10];
+  dtostrf(lonMin, 7, 2, lonMinBuff);
+  sprintf(lonStr, "%03d%s%c", lonDeg, lonMinBuff, (fakeLon >= 0.0) ? 'E' : 'W');
+
+  // Remove any spaces dtostrf() may add on the left
+  for (int i = 0; i < strlen(latStr); i++) if (latStr[i] == ' ') latStr[i] = '0';
+  for (int i = 0; i < strlen(lonStr); i++) if (lonStr[i] == ' ') lonStr[i] = '0';
+
+  APRS_setLat(latStr);
+  APRS_setLon(lonStr);
+
+  // --- Fake telemetry string ---
+  sprintf(telemetry_buff,
+          "000/000A=%06ld 001TxC %06.2fC %07.2fhPa %05.2fV 00S %s",
+          (long)fakeAlt,
+          bmp.readTemperature(),
+          bmp.readPressure() / 100.0,
+          readBatt(),
+          comment);
+
+#if defined(DEVMODE)
+  Serial.println(F("Using Fake GPS Coordinates (Starbase, TX)"));
+  Serial.print(F("Lat: ")); Serial.println(latStr);
+  Serial.print(F("Lon: ")); Serial.println(lonStr);
+#endif
 }
