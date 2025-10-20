@@ -51,8 +51,14 @@ arduino-cli upload -p COM12 --fqbn MightyCore:avr:1284:bootloader=uart0,BOD=2v7,
 ## Serial Monitor with Arduino CLI
 arduino-cli monitor -p COM12 -c baudrate=57600
 
+# Various APRS Code Files Available
+* APRS_Test: GPS blocking. This code will prevent the LightAPRS module from transmitting if there is no GPS. Need to be under the open sky and have 4 or more satellites for a GPS lock and to transmit if running this code.
+* APRS_Fake_GPS_Test: Transmits a fake GPS location (Starbase, Texas) so that testing can be done indoors.
+* APRS_Test_NoGPS_EmptyPacket: No GPS, Transmits an empty packet for testing purposes.
+
 # Further Troubleshooting
 * The problem seems to be deeper than we thought. The fact that AFSK1200 is not decoding APRS packets inside GQRX and Direwolf is also not decoding APRS packets is worrying.
 * The next step would be to find a clean [APRS tone](https://commons.wikimedia.org/wiki/File%3AAFSK_1200_baud.ogg?utm_source=chatgpt.com) and record this as a WAV file and playback to Direwolf and see if it can decode it. 
 * If Direwolf can decode this clean sample APRS tone then the problem is with the LightAPRS transmitter - Analyse the LightAPRS code and tweak the SA818V settings to fix it.
 * If Direwolf cannot decode this clean sample APRS tone then the problem is with the receiver side DSP.
+* While testing, it might be useful to tune the Baofeng handheld transceiver to 144.390MHz and keep it on. It will play the APRS tone everytime the LightAPRS transmits, good for confirming how good the transmitted signal is.
